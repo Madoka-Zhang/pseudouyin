@@ -1,5 +1,10 @@
 package com.bytedance.practice5.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -11,7 +16,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.view.MotionEvent;
 import android.view.WindowManager;
@@ -31,6 +38,7 @@ import com.bytedance.practice5.VideoDetailActivity;
 
 import java.io.IOException;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.zip.Inflater;
@@ -64,6 +72,7 @@ public class VideoPlayFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_video_play, container, false);
         mockUrl = getActivity().getIntent().getStringExtra("1");
         Log.d(TAG, mockUrl);
+        Love love = view.findViewById(R.id.love);
 
 
         sv_main_surface = view.findViewById(R.id.sv_surface);
@@ -77,6 +86,14 @@ public class VideoPlayFragment extends Fragment {
 //        textView = view.findViewById(R.id.txt);
 //        tv_end = view.findViewById(R.id.tv_en);
 //        full = view.findViewById(R.id.btn_full);
+        ImageButton btnLove = view.findViewById(R.id.btn_love);
+
+        btnLove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                love.startanima();
+            }
+        });
 
         surfaceHolder.addCallback(new VideoPlayFragment.PlayerCallBack());
         mediaPlayer = new MediaPlayer();
@@ -230,4 +247,89 @@ public class VideoPlayFragment extends Fragment {
             mediaPlayer.stop();
         }
     }
+
+//    public void startanima() {
+//        final ImageView imageView = new ImageView(getContext());
+//        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(300, 300);
+//        params.leftMargin =  (int)(new Random().nextInt(1000));
+//        params.topMargin =(int)(new Random().nextInt(1000));
+//        imageView.setImageDrawable(getResources().getDrawable(R.mipmap.love_red));
+//        imageView.setLayoutParams(params);
+//        addView(imageView);
+//        AnimatorSet animatorSet = new AnimatorSet();
+//        animatorSet.play(scale(imageView, "scaleX", 2f, 0.9f, 100, 0))
+//                .with(scale(imageView, "scaleY", 2f, 0.9f, 100, 0))
+//                .with(rotation(imageView, 0, 0, num[new Random().nextInt(4)]))
+//                .with(alpha(imageView, 0, 1, 100, 0))
+//                .with(scale(imageView, "scaleX", 0.9f, 1, 50, 150))
+//                .with(scale(imageView, "scaleY", 0.9f, 1, 50, 150))
+//                .with(translationY(imageView, 0, -600, 800, 400))
+//                .with(alpha(imageView, 1, 0, 300, 400))
+//                .with(scale(imageView, "scaleX", 1, 3f, 700, 400))
+//                .with(scale(imageView, "scaleY", 1, 3f, 700, 400));
+//        animatorSet.start();
+//
+//        animatorSet.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                super.onAnimationEnd(animation);
+//                removeViewInLayout(imageView);
+//            }
+//        });
+//    }
+//
+//    public static ObjectAnimator scale(View view, String propertyName, float from, float to, long time, long delayTime){
+//        ObjectAnimator translation = ObjectAnimator.ofFloat(view
+//                , propertyName
+//                , from, to);
+//        translation.setInterpolator(new LinearInterpolator());
+//        translation.setStartDelay(delayTime);
+//        translation.setDuration(time);
+//        return translation;
+//    }
+//
+//
+//    public static ObjectAnimator translationX(View view, float from, float to, long time, long delayTime){
+//        ObjectAnimator translation = ObjectAnimator.ofFloat(view
+//                , "translationX"
+//                , from, to);
+//        translation.setInterpolator(new LinearInterpolator());
+//        translation.setStartDelay(delayTime);
+//        translation.setDuration(time);
+//        return translation;
+//    }
+//
+//    public static ObjectAnimator translationY(View view, float from, float to, long time, long delayTime){
+//        ObjectAnimator translation = ObjectAnimator.ofFloat(view
+//                , "translationY"
+//                , from, to);
+//        translation.setInterpolator(new LinearInterpolator());
+//        translation.setStartDelay(delayTime);
+//        translation.setDuration(time);
+//        return translation;
+//
+//    }
+//
+//    public static ObjectAnimator alpha(View view, float from, float to, long time, long delayTime){
+//        ObjectAnimator translation = ObjectAnimator.ofFloat(view
+//                , "alpha"
+//                , from, to);
+//        translation.setInterpolator(new LinearInterpolator());
+//        translation.setStartDelay(delayTime);
+//        translation.setDuration(time);
+//        return translation;
+//    }
+//
+//    public static ObjectAnimator rotation(View view, long time, long delayTime, float... values){
+//        ObjectAnimator rotation = ObjectAnimator.ofFloat(view, "rotation", values);
+//        rotation.setDuration(time);
+//        rotation.setStartDelay(delayTime);
+//        rotation.setInterpolator(new TimeInterpolator() {
+//            @Override
+//            public float getInterpolation(float input) {
+//                return input;
+//            }
+//        });
+//        return rotation;
+//    }
 }
