@@ -37,7 +37,7 @@ public class Love extends RelativeLayout {
         mContext = context;
     }
 
-    
+
 
     public void startanima() {
             final ImageView imageView = new ImageView(mContext);
