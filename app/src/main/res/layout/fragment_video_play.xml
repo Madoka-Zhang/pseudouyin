@@ -4,8 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideoDetailActivity"
-    android:background="@color/black">
+    android:background="@color/black"
+    tools:context=".VideoDetailActivity">
+    <com.bytedance.practice5.Love
+        android:id="@+id/love"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+    </com.bytedance.practice5.Love>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,53 +25,6 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:id="@+id/sv_surface"/>
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:gravity="center"-->
-            <!--android:background="@color/black"-->
-            <!--android:visibility="visible"-->
-            <!--android:alpha="0.5"-->
-            <!--android:id="@+id/m_control"-->
-            <!--android:layout_alignBottom="@+id/sv_surface">-->
-
-            <!--<ImageButton-->
-                <!--android:layout_marginLeft="40dp"-->
-                <!--android:id="@+id/btn_rp"-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:background="#00000000"-->
-                <!--android:scaleType="fitCenter"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"-->
-                <!--app:srcCompat="@mipmap/go"-->
-                <!--android:alpha="0.5"/>-->
-
-            <!--<SeekBar-->
-                <!--android:id="@+id/seekbar"-->
-                <!--android:layout_width="190dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:maxHeight="6px"-->
-                <!--android:minHeight="6px"-->
-                <!--android:progressDrawable="@drawable/bg_adjust_seek_bar"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tv_st"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:text="000:00"-->
-                <!--android:textColor="@color/white"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tv_en"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:text="/000:00"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:layout_marginRight="40dp"/>-->
-
-        <!--</LinearLayout>-->
     </RelativeLayout>
 
 

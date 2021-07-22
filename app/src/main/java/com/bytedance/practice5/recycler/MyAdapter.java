@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bytedance.practice5.R;
 
 import java.text.SimpleDateFormat;
@@ -81,6 +82,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VideoViewHolder>{
             Glide
                     .with(imageView.getContext())
                     .load(videodata.getImageUrl())
+                    .placeholder(R.mipmap.jiazai)
                     .into(imageView);
 
         }
