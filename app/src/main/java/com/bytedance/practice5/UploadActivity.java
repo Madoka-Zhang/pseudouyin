@@ -99,6 +99,8 @@ public class UploadActivity extends AppCompatActivity {
         String mapdir = getOutputPicPath();
         if (mp4Path != null && mp4Path != "") {
             try {
+                File ima = new File(mp4Path);
+                videouri = Uri.fromFile(ima);
                 mediaPlayer.setDataSource(mp4Path);
                 mediaPlayer.prepare();
             } catch (IOException e) {
@@ -318,7 +320,7 @@ public class UploadActivity extends AppCompatActivity {
         if (REQUEST_CODE_VIDEO == requestCode) {
             if (resultCode == Activity.RESULT_OK) {
                 videouri = data.getData();
-                mp4Path = videouri.getPath();
+                mp4Path = null;
 //                mVideoView.setVideoURI(videouri);
                 try {
                     mediaPlayer.reset();
@@ -349,10 +351,10 @@ public class UploadActivity extends AppCompatActivity {
 //            mediaPlayer.prepareAsync();
             Log.d(TAG, "surfaceCreated");
             isReady = true;
-            if (!"".equals(mp4Path) && !mediaPlayer.isPlaying()) {
+            if (!"".equals(videouri) && !mediaPlayer.isPlaying()) {
                 try {
                     mediaPlayer.reset();
-                    mediaPlayer.setDataSource(mp4Path);
+                    mediaPlayer.setDataSource(UploadActivity.this, videouri);
                     mediaPlayer.prepare();
                     mediaPlayer.seekTo(position);
                     Log.d(TAG, "续播时间：" + position);

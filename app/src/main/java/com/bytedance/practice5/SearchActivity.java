@@ -55,6 +55,10 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Constants.search_id = "";
+    }
 
 }
