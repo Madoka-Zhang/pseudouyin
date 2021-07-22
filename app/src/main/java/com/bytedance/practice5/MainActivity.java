@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bytedance.practice5.fragment.AllVideosFragment;
 import com.bytedance.practice5.fragment.MyVideosFragment;
+import com.bytedance.practice5.fragment.PersonalDetailsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity  {
                 }else if (i==1){
                     return new MyVideosFragment();//之后改成我的视频
                 }
-                return new AllVideosFragment();//之后改成个人信息
+                return new PersonalDetailsFragment();//之后改成个人信息
             }
 
 

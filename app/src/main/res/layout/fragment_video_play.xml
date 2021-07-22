@@ -6,13 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     tools:context=".VideoDetailActivity">
-    <com.bytedance.practice5.Love
-        android:id="@+id/love"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
-    </com.bytedance.practice5.Love>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,6 +20,26 @@
             android:layout_centerVertical="true"
             android:id="@+id/sv_surface"/>
     </RelativeLayout>
+
+    <com.bytedance.practice5.Love
+        android:id="@+id/love"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+    </com.bytedance.practice5.Love>
+
+    <ImageButton
+        android:id="@+id/btn_love"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+        android:src="@mipmap/love_red"
+        android:background="#00000000"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 
