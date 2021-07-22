@@ -6,31 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".VideoDetailActivity">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/re_sur">
-        <SurfaceView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout1"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:id="@+id/sv_surface"/>
+            android:layout_height="40dp" />
 
-        <com.bytedance.practice5.fragment.mControl
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager1"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:id="@+id/mc"
-            android:layout_alignBottom="@+id/sv_surface"/>
-    </RelativeLayout>
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
 
-    <Button
-        android:id="@+id/btn_rotate"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:text="转"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

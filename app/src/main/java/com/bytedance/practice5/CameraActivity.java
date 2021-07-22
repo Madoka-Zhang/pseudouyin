@@ -25,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 public class CameraActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
     private SurfaceView mSurfaceView;
@@ -59,11 +61,11 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         initCamera();
         mHolder.addCallback(this);
 
-        if (isExternalStorageReadable()) {
+        if (!isExternalStorageReadable()) {
             ActivityCompat.requestPermissions(this, new
                     String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
-        if (isExternalStorageWritable()) {
+        if (!isExternalStorageWritable()) {
             ActivityCompat.requestPermissions(this, new
                     String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
@@ -242,10 +244,10 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     }
 
     private String getOutputMediaPath() {
-//        File mediaStorageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File mediaStorageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File mediaStorageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        File mediaStorageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile = new File(mediaStorageDir, "IMG_" + timeStamp + ".mp4");
+        File mediaFile = new File(mediaStorageDir, "pseudouyin/IMG_" + timeStamp + ".mp4");
         if (!mediaFile.exists()) {
             mediaFile.getParentFile().mkdirs();
         }

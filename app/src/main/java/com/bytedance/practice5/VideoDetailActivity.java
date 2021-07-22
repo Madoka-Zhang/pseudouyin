@@ -19,26 +19,25 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bytedance.practice5.fragment.mControl;
 
 import java.io.IOException;
 
-public class VideoDetailActivity extends AppCompatActivity {
+import com.bytedance.practice5.fragment.AllVideosFragment;
+import com.bytedance.practice5.fragment.MyVideosFragment;
+import com.bytedance.practice5.fragment.VideoPlayFragment;
+import com.google.android.material.tabs.TabLayout;
 
+public class VideoDetailActivity extends AppCompatActivity {
+    private static final int PAGE_COUNT = 2;
     private static final String TAG = "11111";
     String mockUrl;
 
     int PLAY_TO;
-    private MediaPlayer mediaPlayer;
-    //    private SeekBar seekBar;
-    private SurfaceView sv_main_surface;
-    private SurfaceHolder surfaceHolder;
-
-    private int mVideoWidth, mVideoHeight;
-    private int showVideoHeight, showVideoWidth;
-    private float scale;
-    private mControl control;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -62,51 +61,18 @@ public class VideoDetailActivity extends AppCompatActivity {
 //        videoView.setMediaController(new MediaController(this));
 
 //        videoView.start();
-        sv_main_surface = findViewById(R.id.sv_surface);
-        control = findViewById(R.id.m_control);
-        showVideoWidth = sv_main_surface.getLayoutParams().height;
-        showVideoHeight = sv_main_surface.getLayoutParams().width;
-        surfaceHolder = sv_main_surface.getHolder();
-        surfaceHolder.addCallback(new VideoDetailActivity.PlayerCallBack());
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(this, Uri.parse(mockUrl));
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        if (savedInstanceState != null) {
-            // 从已保存状态恢复成员的值
-            PLAY_TO = savedInstanceState.getInt("playto");
-        } else {
-            PLAY_TO = 0;
-            // 可能初始化一个新实例的默认值的成员
-        }
-
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        setContentView(R.layout.activity_video_detail);
+        ViewPager pager = findViewById(R.id.view_pager1);
+        TabLayout tabLayout = findViewById(R.id.tab_layout1);
+        pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-                mediaPlayer.setLooping(true);
+            public Fragment getItem(int i) {
+                if(i==0){
+                    return new VideoPlayFragment();
+                }
+                    return new AllVideosFragment();
             }
-        });
-
-        mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-            @Override
-            public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-                mVideoWidth = mediaPlayer.getVideoWidth();
-                mVideoHeight = mediaPlayer.getVideoHeight();
-
-                scale = (float) mVideoHeight / (float) mVideoWidth;
-//                int newwidth, newheight; = (int)(showVideoHeight*scale);
-                int newheight = (int)(showVideoWidth*scale);
-                sv_main_surface.setLayoutParams(new RelativeLayout.LayoutParams(showVideoWidth, newheight));
-
-            }
-        });
-
 
 //        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
@@ -117,45 +83,26 @@ public class VideoDetailActivity extends AppCompatActivity {
 
 
 
-        Button btnrte = findViewById(R.id.btn_rotate);
-        btnrte.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            // @Override
+            // public void onClick(View v) {
 //                PLAY_TO= sv_main_surface.getCurrentPosition();
+            public int getCount() {
+                return PAGE_COUNT;
+            }
 
-                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            @Override
+            public CharSequence getPageTitle(int position) {
+                if(position==0){
+                    return "当前视频";
                 }
-                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                }
-
-//                videoView.seekTo(PLAY_TO);
-
+                    return "推荐";
             }
         });
+        Log.d("11111","test");
+        tabLayout.setupWithViewPager(pager);
+
     }
 
-    private class PlayerCallBack implements SurfaceHolder.Callback {
 
-        @Override
-        public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            mediaPlayer.setDisplay(surfaceHolder);
-//            mediaPlayer.setSurface(surfaceHolder.getSurface());
-//            mediaPlayer.prepareAsync();
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-        }
-    }
 
 }

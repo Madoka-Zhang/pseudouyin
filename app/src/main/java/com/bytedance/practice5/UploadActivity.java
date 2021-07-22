@@ -1,5 +1,6 @@
 package com.bytedance.practice5;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -45,6 +46,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 public class UploadActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_COVER_IMAGE = 101;
     private static final String COVER_IMAGE_TYPE = "image/*";
@@ -68,6 +71,10 @@ public class UploadActivity extends AppCompatActivity {
 //    private SeekBar seekBar;
     private SurfaceView sv_main_surface;
     private SurfaceHolder surfaceHolder;
+    private MediaMetadataRetriever mMetadataRetriever;
+
+    private boolean isReady;
+    private int position;
 
 
     private static String mp4Path = "";
@@ -89,14 +96,39 @@ public class UploadActivity extends AppCompatActivity {
         surfaceHolder = sv_main_surface.getHolder();
         surfaceHolder.addCallback(new PlayerCallBack());
         mediaPlayer = new MediaPlayer();
+        String mapdir = getOutputPicPath();
         if (mp4Path != null && mp4Path != "") {
-
             try {
                 mediaPlayer.setDataSource(mp4Path);
                 mediaPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mMetadataRetriever = new MediaMetadataRetriever();
+                    //mPath本地视频地址
+                    mMetadataRetriever.setDataSource(mp4Path);
+                    Bitmap bitmap = mMetadataRetriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST);
+                    try {
+                        File file = new File(mapdir);
+                        FileOutputStream out = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        out.flush();
+                        out.close();
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                Uri.fromFile(new File(file.getPath()))));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    coverSD = findViewById(R.id.sd_cover);
+                    File ima = new File(mapdir);
+                    coverImageUri = Uri.fromFile(ima);
+                    coverSD.setImageURI(coverImageUri);
+                    Log.d(TAG, "pick cover image " + coverImageUri.toString());
+                }
+            }).start();
         }
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -129,7 +161,6 @@ public class UploadActivity extends AppCompatActivity {
 //        showVideoHeight = c.height;
 //        showVideoWidth = mVideoView.getWidth();
 
-        coverSD = findViewById(R.id.sd_cover);
 //        draweeView.setImageURI();
 
         Button btn_upload = findViewById(R.id.bt_upload);
@@ -314,6 +345,19 @@ public class UploadActivity extends AppCompatActivity {
             mediaPlayer.setDisplay(surfaceHolder);
 //            mediaPlayer.setSurface(surfaceHolder.getSurface());
 //            mediaPlayer.prepareAsync();
+            Log.d(TAG, "surfaceCreated");
+            isReady = true;
+            if (!"".equals(mp4Path) && !mediaPlayer.isPlaying()) {
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(mp4Path);
+                    mediaPlayer.prepare();
+                    mediaPlayer.seekTo(position);
+                    Log.d(TAG, "续播时间：" + position);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         @Override
@@ -323,7 +367,25 @@ public class UploadActivity extends AppCompatActivity {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+            isReady = false;
 
+            Log.d(TAG, "surfaceDestroyed");
+            if (mediaPlayer.isPlaying()) {
+                position = mediaPlayer.getCurrentPosition();
+                Log.d(TAG, "当前播放时间：" + position);
+                mediaPlayer.stop();
+            }
         }
+    }
+
+    private String getOutputPicPath() {
+        File mediaStorageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        File mediaStorageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile = new File(mediaStorageDir, "pseudouyin/IMG_" + timeStamp + ".png");
+        if (!mediaFile.exists()) {
+            mediaFile.getParentFile().mkdirs();
+        }
+        return mediaFile.getAbsolutePath();
     }
 }
