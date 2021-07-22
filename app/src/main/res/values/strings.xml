@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">pseudouyin</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="record">录制</string>
+    <string name="upload">上传</string>
+    <string name="change">修改封面</string>
+    <string name="choose">选择视频</string>
+</resources>
