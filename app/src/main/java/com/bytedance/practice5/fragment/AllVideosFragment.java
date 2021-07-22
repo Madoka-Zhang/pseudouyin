@@ -51,6 +51,7 @@ public class AllVideosFragment extends Fragment implements MyAdapter.IOnItemClic
         view = inflater.inflate(R.layout.fragment_all_videos, container, false);
         Fresco.initialize(getActivity());
         initview();
+
         return  view;
 
     }

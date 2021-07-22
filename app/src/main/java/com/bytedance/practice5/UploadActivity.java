@@ -1,5 +1,6 @@
 package com.bytedance.practice5;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -46,8 +52,8 @@ public class UploadActivity extends AppCompatActivity {
     private static final String COVER_VIDEO_TYPE = "video/*";
     private static final String TAG = "D";
 
-    private mVideoView mVideoView;
-    private MediaMetadataRetriever mMetadataRetriever;
+//    private mVideoView mVideoView;
+//    private MediaMetadataRetriever mMetadataRetriever;
     private Button mRecordButton;
     private boolean isRecording = false;
     private int mVideoWidth, mVideoHeight;
@@ -57,6 +63,12 @@ public class UploadActivity extends AppCompatActivity {
     private IApi api;
 
     private Uri videouri, coverImageUri;
+
+    private MediaPlayer mediaPlayer;
+//    private SeekBar seekBar;
+    private SurfaceView sv_main_surface;
+    private SurfaceHolder surfaceHolder;
+
 
     private static String mp4Path = "";
 
@@ -72,39 +84,74 @@ public class UploadActivity extends AppCompatActivity {
         initNetwork();
         setContentView(R.layout.activity_upload);
 
-        mVideoView = findViewById(R.id.vv_detail);
-        if (mp4Path != null && mp4Path == "") {
-            mVideoView.setVideoPath(mp4Path);
-            mVideoView.start();
+        sv_main_surface = findViewById(R.id.sv_surface);
+        showVideoHeight = sv_main_surface.getLayoutParams().height;
+        surfaceHolder = sv_main_surface.getHolder();
+        surfaceHolder.addCallback(new PlayerCallBack());
+        mediaPlayer = new MediaPlayer();
+        if (mp4Path != null && mp4Path != "") {
+
+            try {
+                mediaPlayer.setDataSource(mp4Path);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        showVideoHeight = mVideoView.getMeasuredHeight();
-        showVideoWidth = mVideoView.getMeasuredWidth();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+                mediaPlayer.setLooping(true);
+            }
+        });
+
+        mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+            @Override
+            public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
+                mVideoWidth = mediaPlayer.getVideoWidth();
+                mVideoHeight = mediaPlayer.getVideoHeight();
+
+                scale = (float) mVideoWidth / (float) mVideoHeight;
+                int newwidth = (int)(showVideoHeight*scale);
+                if (scale < 1) {
+                    sv_main_surface.setLayoutParams(new RelativeLayout.LayoutParams(newwidth, showVideoHeight));
+                }
+            }
+        });
+
+//        mVideoView = findViewById(R.id.vv_detail);
+//        if (mp4Path != null && mp4Path == "") {
+//            mVideoView.setVideoPath(mp4Path);
+//            mVideoView.start();
+//        }
+//        ViewGroup.LayoutParams c = mVideoView.getLayoutParams();
+//        showVideoHeight = c.height;
+//        showVideoWidth = mVideoView.getWidth();
 
         coverSD = findViewById(R.id.sd_cover);
 //        draweeView.setImageURI();
 
         Button btn_upload = findViewById(R.id.bt_upload);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-                    @Override
-                    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                        mVideoWidth = mp.getVideoWidth();
-                        mVideoHeight = mp.getVideoHeight();
-
-                        scale = (float) mVideoWidth / (float) mVideoHeight;
-                        if (scale < 1) {
-                            mVideoView.setMeasure((int)(scale*showVideoHeight), showVideoHeight);
-                        } else {
-
-                        }
-                    }
-                });
-                mp.start();
-                mp.setLooping(true);
-            }
-        });
+//        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+//                    @Override
+//                    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+//                        mVideoWidth = mp.getVideoWidth();
+//                        mVideoHeight = mp.getVideoHeight();
+//
+//                        scale = (float) mVideoWidth / (float) mVideoHeight;
+//                        if (scale < 1) {
+//                            mVideoView.setMeasure((int) (scale * showVideoHeight), showVideoHeight);
+//                        }
+//                    }
+//                });
+//                mp.start();
+//                mp.setLooping(true);
+//            }
+//        });
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,7 +286,14 @@ public class UploadActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 videouri = data.getData();
                 mp4Path = videouri.getPath();
-                mVideoView.setVideoURI(videouri);
+//                mVideoView.setVideoURI(videouri);
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(this, videouri);
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 if (videouri != null) {
                     Log.d(TAG, "pick video " + videouri.toString());
@@ -250,6 +304,26 @@ public class UploadActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG, "file pick fail");
             }
+        }
+    }
+
+    private class PlayerCallBack implements SurfaceHolder.Callback {
+
+        @Override
+        public void surfaceCreated(SurfaceHolder surfaceHolder) {
+            mediaPlayer.setDisplay(surfaceHolder);
+//            mediaPlayer.setSurface(surfaceHolder.getSurface());
+//            mediaPlayer.prepareAsync();
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
         }
     }
 }

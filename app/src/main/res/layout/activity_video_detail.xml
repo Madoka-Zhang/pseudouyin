@@ -8,14 +8,22 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <VideoView
-            android:id="@+id/vv_detail"
+        android:layout_height="wrap_content"
+        android:id="@+id/re_sur">
+        <SurfaceView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            android:layout_height="600dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/sv_surface"/>
+
+        <com.bytedance.practice5.fragment.mControl
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/mc"
+            android:layout_alignBottom="@+id/sv_surface"/>
     </RelativeLayout>
+
 
     <Button
         android:id="@+id/btn_rotate"

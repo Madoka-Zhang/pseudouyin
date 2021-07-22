@@ -25,10 +25,9 @@ public class mVideoView extends VideoView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-// 默认高度，为了自动获取到focus
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = width;
-// 这个之前是默认的拉伸图像
+
+        int width = getDefaultSize(getWidth(), widthMeasureSpec);
+        int height = getDefaultSize(getHeight(), heightMeasureSpec);
         if (this.width > 0 && this.height > 0) {
             width = this.width;
             height = this.height;

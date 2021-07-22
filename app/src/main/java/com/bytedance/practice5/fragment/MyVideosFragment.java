@@ -87,7 +87,7 @@ public class MyVideosFragment extends Fragment implements MyAdapter.IOnItemClick
     public List<VideoData> baseGetReposFromRemote(String studentId, String accept) {
 
         String urlStr =
-                String.format((Constants.BASE_URL+"/video?%s#"),studentId);
+                String.format((Constants.BASE_URL+"/video?student_id=%s#"),studentId);
         List<VideoData> result = null;
         VideoResponse temp = null;
 
