@@ -6,10 +6,16 @@
     android:background="#F0F0F0"
     tools:context=".fragment.AllVideosFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_all"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/layout_swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_all"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </FrameLayout>

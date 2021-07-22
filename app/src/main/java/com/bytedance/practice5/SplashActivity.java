@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,14 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
     private Handler handler = new Handler();
     private TextView tvJump;
+    private Runnable runnableToLogin = new Runnable() {
+        @Override
+        public void run() {
+            handler.removeCallbacks(runnableToLogin);
+            MainActivity.startMainActvity(SplashActivity.this);
+            finish();
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,33 +31,27 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         tvJump = findViewById(R.id.tvJump);
-        tvJump.setOnClickListener(this);
-
-
+        tvJump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handler.removeCallbacks(runnableToLogin);
+                MainActivity.startMainActvity(SplashActivity.this);
+                finish();
+            }
+        });
+        handler.postDelayed(runnableToLogin, 4000);
     }
 
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        handler.postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.startMainActvity(SplashActivity.this);
-                    }
-                }, 3000);
+    protected void onDestroy() {
+        super.onDestroy();
+        //防止内存泄漏
+        handler.removeCallbacks(runnableToLogin);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.tvJump:
-                handler.removeCallbacksAndMessages(null);
-                MainActivity.startMainActvity(SplashActivity.this);
-                break;
-            default:
-                break;
 
-        }
     }
 }

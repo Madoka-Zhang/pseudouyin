@@ -58,6 +58,8 @@ public class VideoPlayFragment extends Fragment {
 //    public TextView textView;
 //    public TextView tv_end;
 //    public ImageButton full;
+    private boolean isReady;
+    private int position;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -218,6 +220,20 @@ public class VideoPlayFragment extends Fragment {
             mediaPlayer.setDisplay(surfaceHolder);
 //            mediaPlayer.setSurface(surfaceHolder.getSurface());
 //            mediaPlayer.prepareAsync();
+            Log.d(TAG, "surfaceCreated");
+            isReady = true;
+
+            if (!mediaPlayer.isPlaying()) {
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(view.getContext(), Uri.parse(mockUrl));
+                    mediaPlayer.prepare();
+                    mediaPlayer.seekTo(position);
+                    Log.d(TAG, "续播时间：" + position);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         @Override
@@ -227,7 +243,14 @@ public class VideoPlayFragment extends Fragment {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-            mediaPlayer.stop();
+            isReady = false;
+
+            Log.d(TAG, "surfaceDestroyed");
+            if (mediaPlayer.isPlaying()) {
+                position = mediaPlayer.getCurrentPosition();
+                Log.d(TAG, "当前播放时间：" + position);
+                mediaPlayer.stop();
+            }
         }
     }
 }

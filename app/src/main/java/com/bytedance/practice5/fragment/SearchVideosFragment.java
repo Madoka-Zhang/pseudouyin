@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bytedance.practice5.Constants;
 import com.bytedance.practice5.R;
@@ -37,38 +38,29 @@ import java.util.List;
 
 import static android.os.Looper.getMainLooper;
 
-public class MyVideosFragment extends Fragment implements MyAdapter.IOnItemClickListener {
+public class SearchVideosFragment extends Fragment implements MyAdapter.IOnItemClickListener {
     private RecyclerView recyclerView;
     private MyAdapter myAdapter= new MyAdapter();
     private RecyclerView.LayoutManager layoutManager;
     private GridLayoutManager gridLayoutManager;
     private View view;
     private static final String TAG = "11111";
-    private SwipeRefreshLayout mRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_all_videos, container, false);
+        view = inflater.inflate(R.layout.fragment_search_videos, container, false);
         Fresco.initialize(getActivity());
         initview();
-        mRefreshLayout = view.findViewById(R.id.layout_swipe_refresh);
-        final Handler handler = new Handler();
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-            public void onRefresh() {
-                new Thread(){
-                    @Override
-                    public void run () {
-                        super.run();
-                        getData(Constants.STUDENT_ID);
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mRefreshLayout.setRefreshing(false);
-                            }
-                        }, 100);
-                    }
-                }.start();
+
+        Button btn = view.findViewById(R.id.button);
+        EditText txt = view.findViewById(R.id.editText);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Constants.search_id = txt.getText().toString();
+                getData(Constants.search_id);
             }
         });
         return  view;
@@ -81,7 +73,7 @@ public class MyVideosFragment extends Fragment implements MyAdapter.IOnItemClick
         myAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(myAdapter);
 
-        getData(Constants.STUDENT_ID);
+        getData(Constants.search_id);
     }
 
 

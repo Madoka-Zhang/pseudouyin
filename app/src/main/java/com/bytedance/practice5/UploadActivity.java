@@ -231,7 +231,9 @@ public class UploadActivity extends AppCompatActivity {
         byte[] videoData = null;
         Uri uri = videouri;
         try {
-            uri = PathUtils.getUriForFile(UploadActivity.this, mp4Path);
+            File ima = new File(mp4Path);
+            uri = Uri.fromFile(ima);
+//            uri = PathUtils.getUriForFile(UploadActivity.this, mp4Path);
         } catch (Exception e) {
             e.printStackTrace();
         }

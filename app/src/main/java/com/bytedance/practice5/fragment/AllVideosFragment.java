@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bytedance.practice5.Constants;
 import com.bytedance.practice5.R;
@@ -44,6 +45,7 @@ public class AllVideosFragment extends Fragment implements MyAdapter.IOnItemClic
     private GridLayoutManager gridLayoutManager;
     private View view;
     private static final String TAG = "11111";
+    private SwipeRefreshLayout mRefreshLayout;
 
     @Nullable
     @Override
@@ -51,7 +53,25 @@ public class AllVideosFragment extends Fragment implements MyAdapter.IOnItemClic
         view = inflater.inflate(R.layout.fragment_all_videos, container, false);
         Fresco.initialize(getActivity());
         initview();
-
+        mRefreshLayout = view.findViewById(R.id.layout_swipe_refresh);
+        final Handler handler = new Handler();
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            public void onRefresh() {
+                new Thread(){
+                    @Override
+                    public void run () {
+                        super.run();
+                        getData(null);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRefreshLayout.setRefreshing(false);
+                            }
+                        }, 100);
+                    }
+                }.start();
+            }
+        });
         return  view;
 
     }

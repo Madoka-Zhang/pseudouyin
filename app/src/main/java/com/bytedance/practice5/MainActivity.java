@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity  {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(this, SearchActivity.class));
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
             }
         });
 
