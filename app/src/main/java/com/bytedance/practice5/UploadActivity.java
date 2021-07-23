@@ -98,6 +98,7 @@ public class UploadActivity extends AppCompatActivity {
         surfaceHolder.addCallback(new PlayerCallBack());
         mediaPlayer = new MediaPlayer();
         String mapdir = getOutputPicPath();
+        coverSD = findViewById(R.id.sd_cover);
         if (mp4Path != null && mp4Path != "") {
             try {
                 File ima = new File(mp4Path);
@@ -125,7 +126,6 @@ public class UploadActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    coverSD = findViewById(R.id.sd_cover);
                     File ima = new File(mapdir);
                     coverImageUri = Uri.fromFile(ima);
                     coverSD.setImageURI(coverImageUri);
