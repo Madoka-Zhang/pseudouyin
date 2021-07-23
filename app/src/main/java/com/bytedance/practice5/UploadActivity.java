@@ -75,6 +75,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private boolean isReady;
     private int position;
+    private Button btn_upload;
 
 
     private static String mp4Path = "";
@@ -110,7 +111,7 @@ public class UploadActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     mMetadataRetriever = new MediaMetadataRetriever();
-                    //mPath本地视频地址
+                    //mp4Path本地视频地址
                     mMetadataRetriever.setDataSource(mp4Path);
                     Bitmap bitmap = mMetadataRetriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST);
                     try {
@@ -165,7 +166,9 @@ public class UploadActivity extends AppCompatActivity {
 
 //        draweeView.setImageURI();
 
-        Button btn_upload = findViewById(R.id.bt_upload);
+        btn_upload = findViewById(R.id.bt_upload);
+        btn_upload.setEnabled(true);
+        btn_upload.setText("上传");
 //        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
 //            public void onPrepared(MediaPlayer mp) {
@@ -254,6 +257,8 @@ public class UploadActivity extends AppCompatActivity {
             Call<UploadResponse> response = api.submitMessage(Constants.STUDENT_ID, Constants.USER_NAME, "", coverImagePart, videoPart, Constants.token);
             Log.d("Submit", response.toString());
             Toast.makeText(this, "开始提交", Toast.LENGTH_SHORT).show();
+            btn_upload.setEnabled(false);
+            btn_upload.setText("提交中");
             response.enqueue(new Callback<UploadResponse>() {
                 @Override
                 public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
@@ -266,6 +271,8 @@ public class UploadActivity extends AppCompatActivity {
                         Toast.makeText(getApplication(), "提交成功", Toast.LENGTH_SHORT).show();
                         finish();
                     }
+                    btn_upload.setEnabled(true);
+                    btn_upload.setText("上传");
                 }
 
                 @Override

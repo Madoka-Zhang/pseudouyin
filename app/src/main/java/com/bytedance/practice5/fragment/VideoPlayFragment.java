@@ -96,16 +96,21 @@ public class VideoPlayFragment extends Fragment {
                 love.startanima();
             }
         });
+        mediaPlayer = new MediaPlayer();
 
         surfaceHolder.addCallback(new VideoPlayFragment.PlayerCallBack());
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(view.getContext(), Uri.parse(mockUrl));
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(view.getContext(), Uri.parse(mockUrl));
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         isrun = true;
 //        int duration2 = mediaPlayer.getDuration() / 1000;
 //        int position = mediaPlayer.getCurrentPosition();
